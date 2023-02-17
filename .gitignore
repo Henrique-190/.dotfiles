@@ -1,3 +1,4 @@
 *.desktop
 Personal/openvpn/*
 Personal/token
+logs/*
