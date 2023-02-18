@@ -48,17 +48,22 @@ if [ "$DEBUG" == false ]; then clear; fi
 
 
 
+
 #----------------------------------------------> Update and Upgrade
 echo -e "\033[1;33m> Updating\033[0m";
 touch $LOGFOLDER"update.log";
-execute $DEBUG "sudo apt update -y" $LOGFOLDER"update.log";
+execute $DEBUG "sudo apt-get update -y" $LOGFOLDER"update.log";
 if [[ $? > 0 ]]
 then
+    echo $?
     print $DEBUG "\033[0;31m> Update: The command failed. Check "$LOGFOLDER"update.log\033[0m";
-    
+else
+    print $DEBUG "\033[0;32m> Update: Updated\033[0m";
+    rm $LOGFOLDER"update.log";
+
     echo -e "\033[1;33m> Upgrading\033[0m";
     touch $LOGFOLDER"upgrade.log";
-    execute $DEBUG "sudo apt upgrade -y" $LOGFOLDER"upgrade.log";
+    execute $DEBUG "sudo apt-get upgrade -y" $LOGFOLDER"upgrade.log";
     if [[ $? > 0 ]]
     then
         print $DEBUG "\033[0;31m> Upgrade: The command failed. Check "$LOGFOLDER"upgrade.log\033[0m";
@@ -66,9 +71,6 @@ then
         print $DEBUG "\033[0;32m> Upgrade: Upgraded\033[0m";
         rm $LOGFOLDER"upgrade.log";
     fi
-else
-    print $DEBUG "\033[0;32m> Update: Updated\033[0m";
-    rm $LOGFOLDER"update.log";
 fi
 
 
@@ -155,13 +157,13 @@ then
 else
     print $DEBUG "\033[0;32m> JDK 19: Downloaded\033[0m";
     echo -e "\033[1;33m> Installing JDK 19\033[0m";
-    sudo apt-get -qqy install ./jdk-19_linux-x64_bin.deb > $logfile 2>$logfile;
+    execute $DEBUG "sudo apt-get -qqy install ./jdk-19_linux-x64_bin.deb" $logfile;
     if [[ $? > 0 ]]
     then
         print $DEBUG "\033[0;31m> JDK 19: Installation failed. Check $logfile\033[0m";
     else
         print $DEBUG "\033[0;32m> JDK 19: Installed\033[0m";
-        execute $DEBUG "sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-19/bin/java 1919";
+        execute $DEBUG "sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-19/bin/java 1919" $logfile;
         rm $logfile
     fi
     rm jdk-19_linux-x64_bin.deb;

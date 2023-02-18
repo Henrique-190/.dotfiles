@@ -33,7 +33,7 @@ fi
 if [ "$1" == "-d" ]; then DEBUG=true; else DEBUG=false; fi
 COLUMNS=$(tput cols) 
 
-bloat=(account-plugin* aisleriot brltty duplicity empathy empathy-common example-content firefox* gimp 
+bloat=(account-plugin* aisleriot brltty duplicity empathy empathy-common example-content firefox* gedit gimp 
 gnome-accessibility-themes gnome-contacts gnome-mahjongg gnome-mines gnome-orca gnome-screensaver gnome-sudoku 
 gnome-video-effects gnomine landscape-common libreoffice* libsane libsane-common mcp-account-manager-uoa mozilla* 
 openjdk* printer-driver*  rhythmbox* rhythmbox* sane-utils shotwell shotwell-common telepathy* thunderbird* totem*)

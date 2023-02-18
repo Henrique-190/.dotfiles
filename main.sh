@@ -57,6 +57,8 @@ mkdir -p $PWD"temp/";
 
 
 
+
+
 #----------------------------------------------> Bloatware
 $PWD"bloatware.sh" $1;
 
@@ -87,15 +89,15 @@ fi
 
 #----------------------------------------------> Personal
 echo -e "\033[1;33m> Moving personal files.\033[0m";
-cp -R Personal/* ~;
+mv -v Personal/* $HOME;
 if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Folders not moved.\033[0m"; else print $DEBUG "\033[0;32m> Folders moved.\033[0m"; fi
+
 
 
 
 #----------------------------------------------> Wallpaper
 echo -e "\033[1;33m> Setting wallpaper.\033[0m";
-WPPPATH='file://'$PWD'Personal/Pictures/YHLQMDLG.png';
-execute $DEBUG "gsettings set org.gnome.desktop.background picture-uri $WPPPATH" /dev/null;
+gsettings set org.gnome.desktop.background picture-uri file://$HOME/Pictures/YHLQMDLG.png;
 if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Wallpaper not set.\033[0m"; else print $DEBUG "\033[0;32m> Wallpaper set.\033[0m"; fi
 
 
@@ -130,8 +132,3 @@ else
 
     killall -SIGQUIT gnome-shell
 fi
-
-
-
-
-
