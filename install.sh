@@ -51,13 +51,25 @@ if [ "$DEBUG" == false ]; then clear; fi
 #----------------------------------------------> Update and Upgrade
 echo -e "\033[1;33m> Updating\033[0m";
 touch $LOGFOLDER"update.log";
-execute $DEBUG "sudo apt update -y" /dev/null;
-print $DEBUG "\033[0;32m> Updated\033[0m";
-
-echo -e "\033[1;33m> Upgrading\033[0m";
-touch $LOGFOLDER"upgrade.log";
-execute $DEBUG "sudo apt upgrade -y";
-print $DEBUG "\033[0;32m> Upgraded\033[0m";
+execute $DEBUG "sudo apt update -y" $LOGFOLDER"update.log";
+if [[ $? > 0 ]]
+then
+    print $DEBUG "\033[0;31m> Update: The command failed. Check "$LOGFOLDER"update.log\033[0m";
+    
+    echo -e "\033[1;33m> Upgrading\033[0m";
+    touch $LOGFOLDER"upgrade.log";
+    execute $DEBUG "sudo apt upgrade -y" $LOGFOLDER"upgrade.log";
+    if [[ $? > 0 ]]
+    then
+        print $DEBUG "\033[0;31m> Upgrade: The command failed. Check "$LOGFOLDER"upgrade.log\033[0m";
+    else
+        print $DEBUG "\033[0;32m> Upgrade: Upgraded\033[0m";
+        rm $LOGFOLDER"upgrade.log";
+    fi
+else
+    print $DEBUG "\033[0;32m> Update: Updated\033[0m";
+    rm $LOGFOLDER"update.log";
+fi
 
 
 
@@ -73,6 +85,7 @@ printf "%*s\n" $(((${#header}+$COLUMNS)/2)) "$header";
 for i in "${apts[@]}"
 do
     logfile=$LOGFOLDER$(echo $i  | head -n1 | cut -d " " -f1)".log";
+    touch $logfile;
     echo -e "\033[1;33m> Installing $i\033[0m";
     execute $DEBUG "sudo apt install $i -y" $logfile;
     if [[ $? > 0 ]]
@@ -90,6 +103,7 @@ done
 for i in "${snaps[@]}"
 do
     logfile=$LOGFOLDER$(echo $i  | head -n1 | cut -d " " -f1)".log";
+    touch $logfile;
     echo -e "\033[1;33m> Installing $i\033[0m";
     execute $DEBUG "sudo snap install $i" $logfile;
     if [[ $? > 0 ]]
@@ -109,6 +123,7 @@ cd temp;
 #----------------------------------------------> Install Chrome
 echo -e "\033[1;33m> Downloading Chrome\033[0m";
 logfile=$LOGFOLDER"chrome.log";
+touch $logfile;
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb > $logfile 2>$logfile;
 if [[ $? > 0 ]]
 then
@@ -122,9 +137,9 @@ else
         print $DEBUG "\033[0;31m> Chrome: Installation failed. Check $logfile\033[0m";
     else
         print $DEBUG "\033[0;32m> Chrome: Installed\033[0m";
-        rm google-chrome-stable_current_amd64.deb;
         rm $logfile
     fi
+    rm google-chrome-stable_current_amd64.deb;
 fi
 
 
@@ -132,6 +147,7 @@ fi
 #----------------------------------------------> Install JDK 19
 echo -e "\033[1;33m> Downloading JDK 19\033[0m";
 logfile=$LOGFOLDER"jkd19.log";
+touch $logfile;
 execute $DEBUG "wget https://download.oracle.com/java/19/latest/jdk-19_linux-x64_bin.deb" $logfile;
 if [[ $? > 0 ]]
 then
@@ -146,8 +162,9 @@ else
     else
         print $DEBUG "\033[0;32m> JDK 19: Installed\033[0m";
         execute $DEBUG "sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk-19/bin/java 1919";
-        rm jdk-19_linux-x64_bin.deb;
+        rm $logfile
     fi
+    rm jdk-19_linux-x64_bin.deb;
 fi
 
 
@@ -155,6 +172,7 @@ fi
 #----------------------------------------------> Install and apply Orchis-Theme
 echo -e "\033[1;33m> Cloning Orchis-Theme\033[0m";
 logfile=$LOGFOLDER"orchisTheme.log";
+touch $logfile;
 execute $DEBUG "git clone https://github.com/vinceliuice/Orchis-theme.git" $logfile;
 if [ $? -eq 0 ]
 then
@@ -179,6 +197,7 @@ fi
 #----------------------------------------------> Install and apply Orchis-Icons
 echo -e "\033[1;33m> Cloning Orchis-Icons\033[0m";
 logfile=$LOGFOLDER"OrchisIcons.log";
+touch $logfile;
 execute $DEBUG "git clone https://github.com/vinceliuice/Tela-circle-icon-theme.git" $logfile;
 if [ $? -eq 0 ]
 then
@@ -200,6 +219,7 @@ fi
 
 echo -e "\033[1;33m> Cloning Dash to Panel\033[0m";
 logfile=$LOGFOLDER"dash-to-panel.log";
+touch $logfile;
 execute $DEBUG "git clone https://github.com/home-sweet-gnome/dash-to-panel.git" $logfile;
 if [ "$?" -eq 0 ]
 then
@@ -211,10 +231,12 @@ then
         print $DEBUG "\033[0;32m> Dash to Panel installed\033[0m";
     else
         print $DEBUG "\033[0;31m> Dash to Panel installation failed. Check $logfile\033[0m";
+        exit 1;
     fi
     cd ..;
 else
     print $DEBUG "\033[0;31m> Dash to Panel cloning failed. Check $logfile\033[0m";
+    exit 1;
 fi
 
 
@@ -222,6 +244,7 @@ fi
 #----------------------------------------------> ArcMenu
 echo -e "\033[1;33m> Cloning ArcMenu\033[0m";
 logfile=$LOGFOLDER"arcmenu.log";
+touch $logfile;
 execute $DEBUG "git clone https://gitlab.com/arcmenu/ArcMenu.git" $logfile;
 if [ "$?" -eq 0 ]
 then
@@ -233,10 +256,12 @@ then
         print $DEBUG "\033[0;32m> ArcMenu installed\033[0m";
     else
         print $DEBUG "\033[0;31m> ArcMenu installation failed. Check $logfile\033[0m";
+        exit 1;
     fi
     cd ..;
 else
-    print $DEBUG "\033[0;31m> ArcMenu cloning failed. Check $logfile\033[0m"
+    print $DEBUG "\033[0;31m> ArcMenu cloning failed. Check $logfile\033[0m";
+    exit 1;
 fi
 
 

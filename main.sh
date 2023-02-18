@@ -107,8 +107,8 @@ if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Packages not removed.\033[0m"; e
 
 
 
-execute $DEBUG "touch ~/Desktop/Extensions.desktop" /dev/null;
-execute $DEBUG "> ~/Desktop/Extensions.desktop" /dev/null;
+touch ~/Desktop/Extensions.desktop;
+> ~/Desktop/Extensions.desktop;
 desktopFile ~/Desktop/Extensions.desktop $PWD"/extensions.sh";
 if [ $? -ne 0 ]
 then 
