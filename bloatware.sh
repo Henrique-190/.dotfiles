@@ -13,7 +13,7 @@ execute (){
     then
         $2;
     else
-        $2 > /dev/null 2> /dev/null;
+        $2 > $3 2> $3;
     fi
 }
 
@@ -49,15 +49,14 @@ printf "%*s\n" $(((${#header}+$COLUMNS)/2)) "$header";
 
 for i in "${bloat[@]}"
 do
-    echo -e "\033[1;33m> Purging "$i"\033[0m";
-    execute $DEBUG "sudo apt purge $i -y";
-    print $DEBUG "\033[0;32m> "$i" purged\033[0m";
+    echo -e "\033[1;33m> Purging $i\033[0m";
+    execute $DEBUG "sudo apt purge $i -y" /dev/null;
+    if [ $? -eq 0 ]; then print $DEBUG "\033[0;32m> $i: Purged\033[0m"; else print $DEBUG "\033[0;31m> $i: Not Purged\033[0m"; fi
 done
 
 echo -e "\033[1;33m> Purging Firefox\033[0m";
-execute $DEBUG "sudo snap remove --purge firefox";
-print $DEBUG "\033[0;32m> Firefox purged\033[0m";
-
+execute $DEBUG "sudo snap remove --purge firefox" /dev/null;
+if [ $? -eq 0 ]; then print $DEBUG "\033[0;32m> Firefox: Purged\033[0m"; else print $DEBUG "\033[0;31m> Firefox: Not Purged\033[0m"; fi
 
 
 printf "%*s\n" $(((${#footer}+$COLUMNS)/2)) "$footer";
