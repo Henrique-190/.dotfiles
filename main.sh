@@ -25,9 +25,9 @@ execute (){
 
 
 #----------------------------------------------> Executable
-chmod +x $FOLDER"bloatware.sh";
-chmod +x $FOLDER"extensions.sh";
-chmod +x $FOLDER"install.sh";
+chmod +x $PWD"bloatware.sh";
+chmod +x $PWD"extensions.sh";
+chmod +x $PWD"install.sh";
 
 
 
@@ -48,65 +48,64 @@ mkdir -p $PWD"logs/";
 mkdir -p $PWD"temp/";
 
 
+
 #----------------------------------------------> Bloatware
 $PWD"bloatware.sh" $1;
 
 
 
 #----------------------------------------------> Wait
-for i in {5..1}
+echo -e "\033[1;33mPreparing to install in 5\033[0m";
+for i in {4..1}
 do
-  echo -e "\033[1;33mPreparing to install in "$i;
+  print $DEBUG "\"\033[1;33mPreparing to install in "$i"\033[0m";
   sleep 1s;
 done
 
 if [ "$DEBUG" == false ]; then clear; fi
-echo -e "\033[0m";
-
 
 
 
 #----------------------------------------------> Install
-if $PWD"install.sh" $1 $PWD;
+if $PWD"install.sh" $1;
 then 
-    echo -e "\033[0;32mInstallation completed successfully.";
+    echo -e "\033[0;32m> Installation completed successfully.\033[0m";
 else
-    echo -e "\033[0;31mInstallation failed.";
+    echo -e "\033[0;31m> Installation failed.\033[0m";
     exit
 fi
-echo -e '\033[0m';
-
-
-#----------------------------------------------> Wait
-for i in {5..1}
-do
-  echo -e "\033[1;33mPreparing to apply extensions in "$i;
-  sleep 1s;
-done
-echo -e "\033[0m";
-
-if [ "$DEBUG" == false ]; then clear; fi
 
 
 
 #----------------------------------------------> Personal
-echo -e "\033[1;33mMoving personal files.";
+echo -e "\033[1;33m> Moving personal files.\033[0m";
 execute $DEBUG "cp -R Personal/* ~";
-if [$? -ne 0]; then echo -e"\033[0;31mFolders not moved."; fi
-echo -e "\033[0m";
+if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Folders not moved.\033[0m"; else print $DEBUG "\033[0;32m> Folders moved.\033[0m"; fi
 
 
 
 #----------------------------------------------> Wallpaper
-WPPPATH='file://'$FOLDER'Personal/Pictures/YHLQMDLG.png';
-gsettings set org.gnome.desktop.background picture-uri $WPPPATH;
-
-
-
-echo -e "Need to reboot. Then, do \033[0;36m\"sh $FOLDER\"extensions.sh\"";
-echo -e "\033[0m";
+echo -e "\033[1;33m> Setting wallpaper.\033[0m";
+WPPPATH='file://'$PWD'Personal/Pictures/YHLQMDLG.png';
+print $DEBUG gsettings set org.gnome.desktop.background picture-uri $WPPPATH;
+if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Wallpaper not set.\033[0m"; else print $DEBUG "\033[0;32m> Wallpaper set.\033[0m"; fi
 
 
 
 #----------------------------------------------> Autoremove
+echo -e "\033[1;33mRemoving unnecessary packages.\033[0m";
 execute $DEBUG "sudo apt autoremove -y";
+if [$? -ne 0]; then print $DEBUG "\033[0;31mPackages not removed.\033[0m"; else print $DEBUG "\033[0;32mPackages removed.\033[0m"; fi
+
+
+
+echo -e "Need to reboot. Then, do \033[0;36m"$PWD"extensions.sh\033[0m";
+
+echo "Execute "$PWD"extensions.sh" > ~/Desktop/TODO.txt;
+
+echo "Reboot? (y/n)";
+read -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo reboot;
+fi

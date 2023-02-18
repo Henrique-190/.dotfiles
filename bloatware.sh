@@ -49,12 +49,15 @@ printf "%*s\n" $(((${#header}+$COLUMNS)/2)) "$header";
 
 for i in "${bloat[@]}"
 do
-    echo -e "\033[1;33m> Purging "$i;
+    echo -e "\033[1;33m> Purging "$i"\033[0m";
     execute $DEBUG "sudo apt purge $i -y";
-    print $DEBUG "\033[0;32m> Purged "$i;
+    print $DEBUG "\033[0;32m> "$i" purged\033[0m";
 done
 
+echo -e "\033[1;33m> Purging Firefox\033[0m";
 execute $DEBUG "sudo snap remove --purge firefox";
+print $DEBUG "\033[0;32m> Firefox purged\033[0m";
 
-echo -e "\033[0m";
+
+
 printf "%*s\n" $(((${#footer}+$COLUMNS)/2)) "$footer";
