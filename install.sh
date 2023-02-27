@@ -33,9 +33,9 @@ LOGFOLDER=$PWD"logs/"
 TEMPFOLDER=$PWD"temp/"
 
 apts=(chrome-gnome-shell dbus-x11 gettext gir1.2-gmenu-3.0 git gnome-control-center gnome-menus 
-gnome-shell-extensions gnome-tweaks libgettextpo-dev make mysql-server sassc wget)
+gnome-shell-extensions gnome-tweaks libgettextpo-dev make mysql-server npm pip sassc wget)
 
-snaps=("--classic code" "clion --classic" discord "intellij-idea-ultimate --classic" 
+snaps=("--classic code" "clion --classic" curl discord "intellij-idea-ultimate --classic" 
 mysql-workbench-community "pycharm-professional --classic" snapd spotify "sublime-text --classic" vlc)
 
 COLUMNS=$(tput cols) 

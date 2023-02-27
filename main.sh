@@ -57,8 +57,6 @@ mkdir -p $PWD"temp/";
 
 
 
-
-
 #----------------------------------------------> Bloatware
 $PWD"bloatware.sh" $1;
 
@@ -94,11 +92,16 @@ if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Folders not moved.\033[0m"; else
 
 
 
-
 #----------------------------------------------> Wallpaper
 echo -e "\033[1;33m> Setting wallpaper.\033[0m";
 gsettings set org.gnome.desktop.background picture-uri file://$HOME/Pictures/YHLQMDLG.png;
 if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Wallpaper not set.\033[0m"; else print $DEBUG "\033[0;32m> Wallpaper set.\033[0m"; fi
+
+
+
+#----------------------------------------------> Sounds
+gsettings set org.gnome.desktop.sound event-sounds false
+if [ $? -ne 0 ]; then print $DEBUG "\033[0;31m> Sounds disabled.\033[0m"; else print $DEBUG "\033[0;32m> Sounds disabled.\033[0m"; fi
 
 
 
