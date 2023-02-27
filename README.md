@@ -1,5 +1,9 @@
 # My DotFiles
 
+## Screenshot
+![Screenshot](https://github.com/Henrique-190/.dotfiles/blob/main/Personal/Desktop.png "Desktop")
+
+
 ## Getting Started
 Steps:
 - Clone the repository or download the zip file and extract its contents;
