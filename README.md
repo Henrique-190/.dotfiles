@@ -1,4 +1,5 @@
 # My DotFiles
+My Linux configuration.
 
 ## Screenshot
 ![Screenshot](https://github.com/Henrique-190/.dotfiles/blob/main/Personal/Desktop.png "Desktop")
